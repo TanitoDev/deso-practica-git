@@ -38,10 +38,8 @@ public class FlightDaoMemoryImpl implements FlightDao {
     // Recorre todos los vuelos en memoria
     return flights.values().stream()
             // Llama a getId() (el de TouristService) y lo compara con el del CSV
-            .filter(flight -> {
-                flight.getId();
-                return false;
-            })
-            .findFirst();
+            .filter(flight ->
+                flight.getId().equals(id)).findFirst();
+
   }
 }

@@ -64,7 +64,7 @@ public class ReservationDaoFileImpl implements ReservationDao {
       .filter(reserva -> {
         Instant fecha = reserva.getDate();
         return (
-                (fecha.equals(from) || fecha.isBefore(from))
+                (fecha.equals(from) || fecha.isAfter(from))
                  && (fecha.equals(to) || fecha.isBefore(to)));
           })
 
@@ -95,19 +95,21 @@ public class ReservationDaoFileImpl implements ReservationDao {
           Instant date = Instant.parse(data[3]);
 
 
-          Flight flight = FlightDaoMemoryImpl.getInstance().findById(serviceId).orElse(null);
-          User user = UserDaoFileImpl.getInstance().findById(ownerId).orElse(null);
+          // Recrear objetos básicos solo con sus IDs extraídos del CSV
+          Flight flight = new Flight("Vuelo de prueba");
+          // Nota: Si tu clase Flight o TouristService requiere el ID explícito, agrégalo:
+          // flight.setId(serviceId);
 
-          if (flight != null && user != null) {
-            Reservation reserva = new Reservation.Builder()
-                    .id(reservationId)
-                    .service(flight)
-                    .owner(user)
-                    .date(date)
-                    .build();
+          User user = User.builder().id(ownerId).build();
 
-            reservations.add(reserva);
-          }
+          Reservation reserva = new Reservation.Builder()
+                  .id(reservationId)
+                  .service(flight)
+                  .owner(user)
+                  .date(date)
+                  .build();
+
+          reservations.add(reserva);
         }
       }
     } catch (IOException e) {

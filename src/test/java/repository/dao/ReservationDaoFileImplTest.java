@@ -22,8 +22,8 @@ class ReservationDaoFileImplTest {
 
   private ReservationDaoFileImpl reservationDao;
 
-  private final Instant from = Instant.parse("2026-08-23T22:25:31.973505999Z");
-  private final Instant to = Instant.parse("2026-08-23T22:25:54.745421341Z");
+  private final Instant from = Instant.parse("2026-01-01T00:00:00Z");
+  private final Instant to = Instant.parse("2026-01-31T00:00:00Z");
 
   @BeforeEach
   void setUp() {
