@@ -8,6 +8,7 @@ import exception.UserNotFoundException;
 import repository.dao.FileUserDao;
 import repository.dao.UserDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
@@ -33,6 +34,16 @@ public class UserService {
   // Ejercicio 9
   public List<User> getUsersPresentInFileAndDao(FileUserDao fileUserDao, UserDao userDao)
       throws DataAccessException {
-    throw new UnsupportedOperationException("Ejercicio 9: implement getUsersPresentInFileAndDao");
+    List<User> usersInBoth = new ArrayList<>();
+
+    for (User fileUser : fileUserDao.findAll()) {
+      try {
+        userDao.findByUsername(fileUser.getUsername()).ifPresent(usersInBoth::add);
+      } catch (DataAccessException e) {
+        // Un fallo puntual no corta el proceso: se ignora este usuario y se sigue con el resto
+      }
+    }
+
+    return usersInBoth;
   }
 }
