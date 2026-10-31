@@ -76,8 +76,26 @@ public class ReservationService {
   public List<Reservation> getTopNMostExpensive(
       ReservationDao reservationDao, Instant from, Instant to, int n)
       throws InvalidDateRangeException, DataAccessException {
-    throw new UnsupportedOperationException("Ejercicio 3: implement getTopNMostExpensive");
-  }
+
+      // 1. Validar el tamaño de n
+      if (n <= 0) {
+        return java.util.Collections.emptyList();
+      }
+
+      // 2. Validar el rango de fechas
+      if (from == null || to == null || from.isAfter(to)) {
+        throw new InvalidDateRangeException("Rango de fechas inválido: from no puede ser mayor que to, y no pueden ser nulos.");
+      }
+
+      // 3. Invocar al DAO para obtener las reservas en el rango
+      List<Reservation> reservationsInRange = reservationDao.findByDateRange(from, to);
+
+      // 4. Procesar la lista: ordenar descendentemente por precio y limitar a n
+      return reservationsInRange.stream()
+              .sorted(java.util.Comparator.comparing(Reservation::calculatePrice).reversed())
+              .limit(n)
+              .collect(java.util.stream.Collectors.toList());
+    }
 
   // Ejercicio 5
   public Map<String, List<Reservation>> groupReservationsByCountry(List<Reservation> reservations) {
